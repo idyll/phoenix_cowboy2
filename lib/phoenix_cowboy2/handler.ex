@@ -77,13 +77,14 @@ defmodule Phoenix.Endpoint.Cowboy2Handler do
 
     # Use put_new to allow custom dispatches
     config = Keyword.put_new(config, :dispatch, [{:_, dispatches}])
+    opts = [scheme: scheme, plug: endpoint, options: config]
 
-    {ref, mfa, type, timeout, kind, modules} =
-      Plug.Adapters.Cowboy2.child_spec(scheme, endpoint, [], config)
+    spec = Plug.Adapters.Cowboy2.child_spec(opts)
+    {:ranch_listener_sup, ref} = spec.id
 
     # Rewrite MFA for proper error reporting
-    mfa = {__MODULE__, :start_link, [scheme, endpoint, mfa]}
-    {ref, mfa, type, timeout, kind, modules}
+    mfa = {__MODULE__, :start_link, [scheme, endpoint, spec.start]}
+    {ref, mfa, spec.restart, spec.shutdown, spec.type, spec.modules}
   end
 
   defp default_for(Phoenix.Transports.LongPoll), do: Plug.Adapters.Cowboy2.Handler

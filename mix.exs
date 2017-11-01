@@ -14,7 +14,7 @@ defmodule PhoenixCowboy2.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :plug_cowboy2, :phoenix]]
+    [applications: [:logger, :plug, :phoenix]]
   end
 
   # Dependencies can be Hex packages:
@@ -27,7 +27,7 @@ defmodule PhoenixCowboy2.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:plug_cowboy2, github: "voicelayer/plug_cowboy2"},
+    [{:plug, github: "elixir-plug/plug", branch: "master", override: true},
      {:phoenix, "~> 1.2"}]
   end
 end
